@@ -43,7 +43,7 @@ th{background:var(--soft);color:var(--navy);font-weight:700;font-size:11px;text-
 th:first-child,td:first-child{text-align:left}td.l,th.l{text-align:left}tbody tr:hover td{background:#f8fbfe}
 tr.yr td{font-weight:700;background:var(--soft)}tr.sub td:first-child{padding-left:24px;color:var(--mut)}tr.tot td{font-weight:800;border-top:2px solid var(--navy);background:#fff}
 .hm td{font-variant-numeric:tabular-nums}.hm td.c{border-left:2px solid #fff}
-.scroll{max-height:440px;overflow:auto;border-radius:8px}.muted{color:var(--mut);font-size:11px}
+.scroll{max-height:440px;overflow:auto;border-radius:8px}.card>div:not(.chart):not(.chips){overflow-x:auto}.muted{color:var(--mut);font-size:11px}
 .pill{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10.5px;font-weight:600;background:#e8f2fb;color:var(--blue)}
 .pill.lost{background:#f4e9f4;color:var(--plum)}.pill.won{background:#eaf5e3;color:#3d7f1d}
 .chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
@@ -90,7 +90,6 @@ tr.yr td{font-weight:700;background:var(--soft)}tr.sub td:first-child{padding-le
    <div class="chart s"><canvas id="c-age"></canvas></div></div>
   <div class="card"><h3>Top Lost Reasons</h3><div class="cap" id="lr-cap"></div><div class="chart t"><canvas id="c-lr"></canvas></div></div>
  </div>
- <div class="card"><h3>Top 10 Open Opportunities</h3><div class="cap">Largest open deals in the current selection</div><div id="top10"></div></div>
  <div class="card"><h3>Opportunity Outcomes by Year and Source</h3><div class="cap">Fiscal year &rsaquo; Marketing (has Campaign) vs Sales. Same logic as the Power BI table.</div><div id="outc"></div></div>
  <div class="card"><h3>Opportunity Detail</h3>
   <div class="det-bar"><input id="q" placeholder="Search opportunity, account or owner..."><span class="muted" id="det-n"></span></div>
@@ -248,12 +247,6 @@ function renderOpps(){
     options:{indexAxis:'y',maintainAspectRatio:false,layout:{padding:{right:50}},plugins:{legend:{display:false},
       datalabels:{anchor:'end',align:'end',font:{weight:700},color:'#1b2a3a',formatter:v=>`${n0(v)} (${pct(v,LO.length)})`}},
       scales:{x:{display:false},y:{...noGridX,ticks:{font:{size:10.5}}}}}});
-
-  // Top 10 open
-  const T=[...open].sort((a,b)=>b.amount-a.amount).slice(0,10);
-  let t='<table><thead><tr><th class="l">Opportunity</th><th class="l">Account</th><th class="l">Owner</th><th class="l">Instrument</th><th class="l">Stage</th><th>Close</th><th>Prob.</th><th>Amount</th></tr></thead><tbody>';
-  T.forEach(r=>{const late=r.close&&dt(r.close)<TODAY;t+=`<tr><td class="l">${esc(r.name)}</td><td class="l">${esc(r.account)}</td><td class="l">${esc(r.owner)}</td><td class="l">${esc(r.itype)}</td><td class="l"><span class="pill">${esc(r.stage)}</span></td><td class="${late?'bad':''}">${r.close}</td><td>${r.prob}%</td><td><b>$${n0(r.amount)}</b></td></tr>`;});
-  document.getElementById('top10').innerHTML=T.length?t+'</tbody></table>':'<span class="muted">No open opportunities.</span>';
 
   // Outcomes (PBI logic)
   const won=r=>D.wonStages.includes(r.stage), lost=r=>r.stage==='Lost';
