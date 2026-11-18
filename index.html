@@ -69,7 +69,7 @@ body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;background:#fff;color:var
 .body{display:grid;grid-template-columns:220px minmax(0,1fr);gap:0}
 .slicers{background:#fff;border-radius:0;box-shadow:none;border-right:1px solid var(--line);padding:22px 22px 22px 0;position:sticky;top:0;align-self:start}
 .logo{display:grid;grid-template-columns:repeat(5,6px);gap:7px;justify-content:center;margin:4px 0 12px}.logo i{width:6px;height:6px;border-radius:50%;background:#6f9fd8}
-.bname{text-align:center;color:var(--brand-red);font-size:21px;font-weight:700}
+.bname{text-align:center;color:var(--brand-red);font-size:21px;font-weight:700;margin-top:4px}
 .bsub{text-align:center;color:var(--mut);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;margin-top:4px;padding-bottom:18px;border-bottom:1px solid var(--rule)}
 .slicers h4{color:var(--txt);font-size:14px;font-weight:700;text-transform:none;letter-spacing:0;margin:16px 0 0;padding-bottom:14px;border-bottom:1px solid var(--rule)}
 .slicers label{color:var(--txt);text-transform:none;letter-spacing:0;font-size:13px;font-weight:400;margin:16px 0 8px}
@@ -90,7 +90,8 @@ main{padding:14px 0 0 22px;min-width:0}
 .kpi{background:#fff;border-radius:0;box-shadow:none;border-right:1px solid var(--line);padding:20px 18px 18px;text-align:left}
 .kpi:last-child{border-right:0}.kpi:before{display:none}
 .kpi .l{text-transform:uppercase;letter-spacing:.07em;font-size:11px;font-weight:700;color:var(--txt)}
-.kpi .v{font-family:Georgia,"Times New Roman",serif;font-size:32px;font-weight:700;color:var(--navy);margin-top:10px;letter-spacing:0}
+.kpi .v{font-family:Georgia,"Times New Roman",serif;font-size:clamp(20px,2vw,28px);font-weight:700;color:var(--navy);margin-top:10px;letter-spacing:0;white-space:nowrap}
+.kpi{min-width:0;padding:18px 14px 16px}.kpi .l{min-height:26px}
 .kpi .s{color:var(--mut);font-size:12px;margin-top:8px}.kpi .s b{color:var(--txt)}
 .bar{background:#e6eaef;border-radius:0;height:5px}.bar i{background:var(--blue)}
 .card{background:transparent;border:0;border-top:1px solid var(--line);border-radius:0;box-shadow:none;padding:18px 0 16px;margin:0}
@@ -113,7 +114,7 @@ footer{padding:14px 32px 28px;border-top:1px solid var(--line);margin-top:8px}
  <div class="hdr-r"><span class="tag" id="tag"></span><span class="asof">As of <b id="asof"></b></span></div></header>
 <div class="cursel"><span class="lbl">Current selections</span><span id="cursel"></span><a id="clear">Clear selections &times;</a></div>
 <div class="body">
-<aside class="slicers" id="slicers"><div class="logo"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="bname">Instruments</div><div class="bsub">Funnel Dashboard</div><h4>Filter opportunities</h4></aside>
+<aside class="slicers" id="slicers"><div class="bname">Instruments</div><div class="bsub">Funnel Dashboard</div><h4>Filter opportunities</h4></aside>
 <main>
 <div class="tabs"><div class="tab active" data-t="opps">Opportunities</div><div class="tab" data-t="fill">Funnel Fill</div></div>
 <!-- ================= TAB 1 ================= -->
@@ -197,6 +198,7 @@ SL.forEach(([k,lab])=>{
   state[k]='';
   if(k==='bl'){
     const BS={'Sample Tech Instruments':'Sample Tech','Sample Tech HID Instruments':'Sample Tech HID','dPCR Instruments':'dPCR','dPCR Dx Instruments':'dPCR Dx'};
+    const BO=Object.keys(BS); vals.sort((a,b)=>(BO.indexOf(a)+99*(BO.indexOf(a)<0))-(BO.indexOf(b)+99*(BO.indexOf(b)<0)));
     sl.insertAdjacentHTML('beforeend',`<div id="w-${k}"><label class="grp">${lab}</label><div class="btng"><button class="bb all on" data-v="">All budget lines</button>${vals.map(v=>`<button class="bb" data-v="${v}">${BS[v]||v}</button>`).join('')}</div><select id="s-${k}" class="hide"><option value="">All</option>${opts}</select></div>`);
     document.querySelectorAll('#w-bl .bb').forEach(b=>b.onclick=()=>{state.bl=b.dataset.v;document.getElementById('s-bl').value=b.dataset.v;
       document.querySelectorAll('#w-bl .bb').forEach(x=>x.classList.toggle('on',x===b));render();});
